@@ -25,7 +25,7 @@ def paint(event):
 
 Master = Tk()
 Master.title("ZaziPaint")
-w = Canvas(Master, width=canvas_w, height=canvas_h)
+w = Canvas(Master, width=canvas_w, height=canvas_h, bg="White")
 w.pack(expand=YES, fill=BOTH)
 w.bind("<B1-Motion>", paint)
 
@@ -80,18 +80,6 @@ def save_file(e=False):
     else:
         save_as_file()
 
-# cut text
-def cut_text(e=False):
-    global selected
-    if e:
-        selected = Master.clipboard_get()
-    else:
-        if w.selection_get():
-            selected = w.selection_get()
-            w.delete("sel.first", "sel.last")
-            Master.clipboard_clear()
-            Master.clipboard_append(selected)
-
 # menu
 m_menu = Menu(Master)
 Master.config(menu=m_menu)
@@ -106,10 +94,6 @@ f_menu.add_command(label="Save as", command=save_as_file)
 f_menu.add_separator()
 f_menu.add_command(label="Exit", command=Master.quit)
 
-# edit menu
-e_menu = Menu(m_menu, tearoff=False)
-m_menu.add_cascade(label="Edit", menu=e_menu)
-
 # edit bindings
 Master.bind('<Control-Key-s>', save_file)
 Master.bind('<Control-Key-S>', save_as_file)
@@ -122,3 +106,4 @@ w.update()
 w.postscript(file="file_name.ps", colormode='color')
 
 mainloop()
+
