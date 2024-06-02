@@ -9,6 +9,8 @@ canvas_h = 600
 
 global opened_name
 opened_name = False
+global clear_drawing
+clear_drawing = False
 
 def paint(event):
     if eraser_mode:
@@ -18,10 +20,9 @@ def paint(event):
         w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
     else:
         # Normal paint mode
-        py_green = "#476042"
         x1, y1 = (event.x - 1), (event.y - 1)
         x2, y2 = (event.x + 1), (event.y + 1)
-        w.create_oval(x1, y1, x2, y2, fill=py_green)
+        w.create_oval(x1, y1, x2, y2, fill="Black")
 
 Master = Tk()
 Master.title("ZaziPaint")
@@ -39,6 +40,14 @@ def toggle_eraser_mode():
         eraser_button.config(text="Brush")
     else:
         eraser_button.config(text="Eraser")
+
+#clear drawing
+#def clear_drawing():
+#    global clear_drawing
+#    if clear_drawing:
+#        clear_drawing = True
+#        w.pack(fill="White")
+
 
 # create new file
 def new_file():
