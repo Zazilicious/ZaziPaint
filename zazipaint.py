@@ -39,14 +39,6 @@ def toggle_eraser_mode():
     else:
         eraser_button.config(text="Eraser")
 
-#clear drawing
-#def clear_drawing():
-#    global clear_drawing
-#    if clear_drawing:
-#        clear_drawing = True
-#        w.pack(fill="White")
-
-
 # create new file
 def new_file(event):
     x1, y1 = (event.x - 50), (event.y - 50)
