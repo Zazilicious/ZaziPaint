@@ -39,8 +39,8 @@ def toggle_eraser_mode():
     else:
         eraser_button.config(text="Eraser")
 
-# create new file
-def new_file(event=None):
+# clear canvas
+def clear_canvas(event=None):
     global opened_name
     opened_name = False
     w.delete("all")
@@ -86,7 +86,7 @@ Master.config(menu=m_menu)
 # file menu
 f_menu = Menu(m_menu, tearoff=False)
 m_menu.add_cascade(label="File", menu=f_menu)
-f_menu.add_command(label="New", command=new_file)
+f_menu.add_command(label="New", command=clear_canvas)
 f_menu.add_command(label="Open", command=open_file)
 f_menu.add_command(label="Save", command=save_file)
 f_menu.add_command(label="Save as", command=save_as_file)
