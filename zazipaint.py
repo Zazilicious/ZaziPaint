@@ -9,8 +9,8 @@ canvas_h = 600
 
 global opened_name
 opened_name = False
-global clear_drawing
-clear_drawing = False
+global new_file
+new_file = False
 
 def paint(event):
     if eraser_mode:
@@ -40,13 +40,11 @@ def toggle_eraser_mode():
         eraser_button.config(text="Eraser")
 
 # create new file
-def new_file(event):
-    x1, y1 = (event.x - 50), (event.y - 50)
-    x2, y2 = (event.x + 50), (event.y + 50)
-    w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
-    Master.title("New File")
+def new_file(event=None):
     global opened_name
     opened_name = False
+    w.delete("all")
+    Master.title("New File")
 
 # open file
 def open_file():
