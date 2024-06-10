@@ -14,12 +14,10 @@ clear_drawing = False
 
 def paint(event):
     if eraser_mode:
-        # Eraser mode: Draw a white rectangle to simulate erasing
         x1, y1 = (event.x - 5), (event.y - 5)
         x2, y2 = (event.x + 5), (event.y + 5)
         w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
     else:
-        # Normal paint mode
         x1, y1 = (event.x - 1), (event.y - 1)
         x2, y2 = (event.x + 1), (event.y + 1)
         w.create_oval(x1, y1, x2, y2, fill="Black")
@@ -50,8 +48,10 @@ def toggle_eraser_mode():
 
 
 # create new file
-def new_file():
-    w.delete("1.0", END)
+def new_file(event):
+    x1, y1 = (event.x - 50), (event.y - 50)
+    x2, y2 = (event.x + 50), (event.y + 50)
+    w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
     Master.title("New File")
     global opened_name
     opened_name = False
