@@ -10,7 +10,6 @@ canvas_h = 600
 global opened_name
 opened_name = False
 global new_file
-new_file = False
 
 def paint(event):
     if eraser_mode:
@@ -29,8 +28,30 @@ w.pack(expand=YES, fill=BOTH)
 w.bind("<B1-Motion>", paint)
 
 # Variable to track if eraser mode is active
+
 eraser_mode = False
 
+# Variable to track if brusy type is active
+
+g_brush_types = False
+
+#Brush types
+
+def brush_types():
+    x1, y1 = (event.x - 40), (event.y - 40)
+    x2, y2 = (event.x + 40), (event.y + 40)
+    w.create_rectangle(x1, y1, x2, y2, fill="Black", outline="Black")
+
+#toggle brush types
+def toggle_brush_types():
+    global g_brush_types
+    g_brush_types = not g_brush_types
+    if g_brush_types:
+        brush_button.config(text="Big Brush")
+    else:
+        brush_button.config(text="Brush")
+
+# toggles eraser mode
 def toggle_eraser_mode():
     global eraser_mode
     eraser_mode = not eraser_mode
@@ -100,6 +121,11 @@ Master.bind('<Control-Key-S>', save_as_file)
 # Eraser button
 eraser_button = Button(Master, text="Eraser", command=toggle_eraser_mode)
 eraser_button.pack(side=LEFT)
+
+# Brush types button
+brush_button = Button(Master, text="Big Brush", command=toggle_brush_types)
+brush_button.pack(side=LEFT)
+
 
 w.update()
 w.postscript(file="file_name.ps", colormode='color')
