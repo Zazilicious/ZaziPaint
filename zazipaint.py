@@ -13,13 +13,13 @@ global new_file
 
 def paint(event):
     if eraser_mode:
-        x1, y1 = (event.x - 5), (event.y - 5)
-        x2, y2 = (event.x + 5), (event.y + 5)
+        x1, y1 = (event.x - 10), (event.y - 10)
+        x2, y2 = (event.x + 10), (event.y + 10)
         w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
     else:
-        x1, y1 = (event.x - 1), (event.y - 1)
-        x2, y2 = (event.x + 1), (event.y + 1)
-        w.create_oval(x1, y1, x2, y2, fill="Black")
+        x1, y1 = (event.x - 3), (event.y - 3)
+        x2, y2 = (event.x + 3), (event.y + 3)
+        w.create_oval(x1, y1, x2, y2, fill="black")
 
 Master = Tk()
 Master.title("ZaziPaint")
@@ -40,16 +40,16 @@ g_brush_types = False
 def brush_types():
     x1, y1 = (event.x - 40), (event.y - 40)
     x2, y2 = (event.x + 40), (event.y + 40)
-    w.create_rectangle(x1, y1, x2, y2, fill="Black", outline="Black")
+    w.create_rectangle(x1, y1, x2, y2, fill="red", outline="red")
 
 #toggle brush types
 def toggle_brush_types():
     global g_brush_types
     g_brush_types = not g_brush_types
     if g_brush_types:
-        brush_button.config(text="Big Brush")
+        brush_button.config(text="Red Brush")
     else:
-        brush_button.config(text="Brush")
+        brush_button.config(text="Black Brush")
 
 # toggles eraser mode
 def toggle_eraser_mode():
@@ -123,7 +123,7 @@ eraser_button = Button(Master, text="Eraser", command=toggle_eraser_mode)
 eraser_button.pack(side=LEFT)
 
 # Brush types button
-brush_button = Button(Master, text="Big Brush", command=toggle_brush_types)
+brush_button = Button(Master, text="Red Brush", command=toggle_brush_types)
 brush_button.pack(side=LEFT)
 
 
@@ -131,4 +131,3 @@ w.update()
 w.postscript(file="file_name.ps", colormode='color')
 
 mainloop()
-
