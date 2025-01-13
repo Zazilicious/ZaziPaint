@@ -1,133 +1,67 @@
 import tkinter as tk
-from tkinter import *
-from tkinter import filedialog
-from tkinter import font
-from tkinter import messagebox
+from tkinter import colorchooser
 
-canvas_w = 800
-canvas_h = 600
+class DrawingApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("ZaziPaint")
 
-global opened_name
-opened_name = False
-global new_file
+        # Set up the canvas
+        self.canvas = tk.Canvas(root, width=600, height=400, bg="white")
+        self.canvas.pack()
 
-def paint(event):
-    if eraser_mode:
-        x1, y1 = (event.x - 10), (event.y - 10)
-        x2, y2 = (event.x + 10), (event.y + 10)
-        w.create_rectangle(x1, y1, x2, y2, fill="white", outline="white")
-    else:
-        x1, y1 = (event.x - 3), (event.y - 3)
-        x2, y2 = (event.x + 3), (event.y + 3)
-        w.create_oval(x1, y1, x2, y2, fill="black")
+        # Set up drawing variables
+        self.last_x = None
+        self.last_y = None
+        self.color = "black"
+        self.eraser_mode = False  # Initially, it's in drawing mode
 
-Master = Tk()
-Master.title("ZaziPaint")
-w = Canvas(Master, width=canvas_w, height=canvas_h, bg="White")
-w.pack(expand=YES, fill=BOTH)
-w.bind("<B1-Motion>", paint)
+        # Bind mouse events to canvas
+        self.canvas.bind("<B1-Motion>", self.paint)
+        self.canvas.bind("<ButtonRelease-1>", self.reset)
 
-# Variable to track if eraser mode is active
+        # Add buttons for color change and eraser
+        self.color_button = tk.Button(root, text="Change Color", command=self.change_color)
+        self.color_button.pack(side=tk.LEFT, padx=10)
 
-eraser_mode = False
+        self.eraser_button = tk.Button(root, text="Eraser", command=self.toggle_eraser)
+        self.eraser_button.pack(side=tk.LEFT)
 
-# Variable to track if brusy type is active
+    def paint(self, event):
+        """Function to draw or erase on the canvas."""
+        x, y = event.x, event.y
+        if self.last_x and self.last_y:
+            if self.eraser_mode:
+                # Eraser mode: Draw white lines to "erase" content
+                self.canvas.create_line(self.last_x, self.last_y, x, y, width=20, fill="white", capstyle=tk.ROUND, smooth=tk.TRUE)
+            else:
+                # Drawing mode: Draw lines with the selected color
+                self.canvas.create_line(self.last_x, self.last_y, x, y, width=2, fill=self.color, capstyle=tk.ROUND, smooth=tk.TRUE)
+        self.last_x = x
+        self.last_y = y
 
-g_brush_types = False
+    def reset(self, event):
+        """Reset the last x and y coordinates when the mouse button is released."""
+        self.last_x = None
+        self.last_y = None
 
-#Brush types
+    def change_color(self):
+        """Change the drawing color."""
+        color = colorchooser.askcolor()[1]
+        if color:
+            self.color = color
 
-def brush_types():
-    x1, y1 = (event.x - 40), (event.y - 40)
-    x2, y2 = (event.x + 40), (event.y + 40)
-    w.create_rectangle(x1, y1, x2, y2, fill="red", outline="red")
+    def toggle_eraser(self):
+        """Toggle between drawing and erasing modes."""
+        self.eraser_mode = not self.eraser_mode
+        if self.eraser_mode:
+            self.eraser_button.config(bg="gray")  # Change button color when eraser is active
+        else:
+            self.eraser_button.config(bg="SystemButtonFace")  # Reset button color when eraser is off
 
-#toggle brush types
-def toggle_brush_types():
-    global g_brush_types
-    g_brush_types = not g_brush_types
-    if g_brush_types:
-        brush_button.config(text="Red Brush")
-    else:
-        brush_button.config(text="Black Brush")
+# Set up the main window
+root = tk.Tk()
+app = DrawingApp(root)
 
-# toggles eraser mode
-def toggle_eraser_mode():
-    global eraser_mode
-    eraser_mode = not eraser_mode
-    if eraser_mode:
-        eraser_button.config(text="Brush")
-    else:
-        eraser_button.config(text="Eraser")
-
-# clear canvas
-def clear_canvas(event=None):
-    global opened_name
-    opened_name = False
-    w.delete("all")
-    Master.title("New File")
-
-# open file
-def open_file():
-    w.delete("1.0", END)
-    t_file = filedialog.askopenfilename(initialdir="/home", title="Open File", filetypes=(("PNG Files", "*.png"), ("All Files", "*.*")))
-    if t_file:
-        global opened_name
-        opened_name = t_file
-        name = t_file
-        t_file = open(t_file, 'r')
-        stuff = t_file.read()
-        w.insert(END, stuff)
-        t_file.close()
-
-# save as file
-def save_as_file(e=False):
-    global opened_name
-    t_file = filedialog.asksaveasfilename(defaultextension=".*", initialdir="/home", title="Save File", filetypes=(("PNG Files", "*.png"), ("All Files", "*.*")))
-    opened_name = t_file
-    t_file = open(t_file, 'w')
-    t_file.write(w.get(1.0, END))
-    t_file.close()
-
-# save file
-def save_file(e=False):
-    global opened_name
-    if opened_name:
-        t_file = open(opened_name, 'w')
-        t_file.write(w.get(1.0, END))
-        m_box = messagebox.showinfo("Saved", "File saved successfully")
-        t_file.close()
-    else:
-        save_as_file()
-
-# menu
-m_menu = Menu(Master)
-Master.config(menu=m_menu)
-
-# file menu
-f_menu = Menu(m_menu, tearoff=False)
-m_menu.add_cascade(label="File", menu=f_menu)
-f_menu.add_command(label="New", command=clear_canvas)
-f_menu.add_command(label="Open", command=open_file)
-f_menu.add_command(label="Save", command=save_file)
-f_menu.add_command(label="Save as", command=save_as_file)
-f_menu.add_separator()
-f_menu.add_command(label="Exit", command=Master.quit)
-
-# edit bindings
-Master.bind('<Control-Key-s>', save_file)
-Master.bind('<Control-Key-S>', save_as_file)
-
-# Eraser button
-eraser_button = Button(Master, text="Eraser", command=toggle_eraser_mode)
-eraser_button.pack(side=LEFT)
-
-# Brush types button
-brush_button = Button(Master, text="Red Brush", command=toggle_brush_types)
-brush_button.pack(side=LEFT)
-
-
-w.update()
-w.postscript(file="file_name.ps", colormode='color')
-
-mainloop()
+# Start the main event loop
+root.mainloop()
